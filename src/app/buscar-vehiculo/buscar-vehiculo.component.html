@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+      <h1>Lista de vehiculos</h1>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-group" *ngFor="let item of autosList | async">
+        <li class="list-group-item list-group-item-action flex-column">
+          <div class="row">
+            <div class="col-md-2">
+              <img src="assets/carlist.png">
+            </div>
+            <div class="col-md-10">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">PLACA: {{item.placa}}</h5>
+                <small>Parqueado</small>
+              </div>
+              <p>Hora de entrada: {{item.fentrada}}</p>
+              <p>Saldo acumulado: {{getSaldoAcumulado(item.fentrada)}}</p>
+            </div>
+          </div>
+        </li>
+      </ul>  
+    </div>
+  </div>
+</div>

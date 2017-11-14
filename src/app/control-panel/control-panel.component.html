@@ -1,0 +1,182 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6"><p><img src="assets/temperature.png"><strong>Temperatura:</strong> {{(temperatura | async)?.valor}} °C</p></div>
+    <div class="col-md-6"><img src="assets/idea.png"><strong>Nivel de luz:</strong> {{(iluminacion | async)?.valor}}%</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+        <ngb-alert type="warning" *ngIf="(temperatura | async)?.valor >= 30" [dismissible]="false">Temperatura sobre 30 °C</ngb-alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+        <ngb-alert type="info" *ngIf='(iluminacion | async)?.valor < 50' [dismissible]="false">Iluminacion prendida</ngb-alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+        <ngb-alert type="danger" *ngIf='isOcupado()' [dismissible]="false">No hay celdas disponibles!!!</ngb-alert>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-12"><h3 class="text-center">Celdas de parqueo</h3></div>
+  </div>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <ng-container *ngIf="(celdas[0] | async)?.ocupado === true; else elseTemplate">
+          <img src="assets/parking-filled-green.png"/><h6>Celda 1</h6>
+      </ng-container>
+      <ng-template #elseTemplate>
+          <img src="assets/parking-filled-red.png"/><h6><del>Celda 1</del></h6>
+      </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-container *ngIf="(celdas[1] | async)?.ocupado === true; else elseTemplate1">
+            <img src="assets/parking-filled-green.png"/><h6>Celda 2</h6>
+        </ng-container>
+        <ng-template #elseTemplate1>
+            <img src="assets/parking-filled-red.png"/><h6><del>Celda 2</del></h6>
+        </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-container *ngIf="(celdas[2] | async)?.ocupado === true; else elseTemplate2">
+            <img src="assets/parking-filled-green.png"/><h6>Celda 3</h6>
+        </ng-container>
+        <ng-template #elseTemplate2>
+            <img src="assets/parking-filled-red.png"/><h6><del>Celda 3</del></h6>
+        </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-container *ngIf="(celdas[3] | async)?.ocupado === true; else elseTemplate3">
+            <img src="assets/parking-filled-green.png"/><h6>Celda 4</h6>
+        </ng-container>
+        <ng-template #elseTemplate3>
+            <img src="assets/parking-filled-red.png"/><h6><del>Celda 4</del></h6>
+        </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-container *ngIf="(celdas[4] | async)?.ocupado === true; else elseTemplate4">
+            <img src="assets/parking-filled-green.png"/><h6>Celda 5</h6>
+        </ng-container>
+        <ng-template #elseTemplate4>
+            <img src="assets/parking-filled-red.png"/><h6><del>Celda 5</del></h6>
+        </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-container *ngIf="(celdas[5] | async)?.ocupado === true; else elseTemplate5">
+            <img src="assets/parking-filled-green.png"/><h6>Celda 6</h6>
+        </ng-container>
+        <ng-template #elseTemplate5>
+            <img src="assets/parking-filled-red.png"/><h6><del>Celda 6</del></h6>
+        </ng-template>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-12"><h3 class="text-center">Puertas</h3></div>
+  </div>
+  <div class="row text-center">
+    <div class="col-md-6">
+        <ng-container *ngIf="(celdas[6] | async)?.ocupado === true; else elseTemplateEntrada">
+            <img src="assets/enter.png" style="opacity: 0.4;"><h6><del>Entrada</del></h6>
+        </ng-container>
+        <ng-template #elseTemplateEntrada>
+            <button class="btn btn-lg btn-dark" *ngIf="(permentrada | async)?.valor == 0" (click)="openModal(contentIngreso)">Abrir Entrada</button>
+            <br/>
+            <img src="assets/enter.png"><h6>Entrada</h6>
+        </ng-template>
+    </div>
+    <div class="col-md-6">
+        <ng-container *ngIf="(celdas[7] | async)?.ocupado === true; else elseTemplateSalida">
+            <img src="assets/exit.png" style="opacity: 0.4;"><h6><del>Salida</del></h6>
+        </ng-container>
+        <ng-template #elseTemplateSalida>
+            <button class="btn btn-lg btn-dark" *ngIf="(permsalida | async)?.valor == 0" (click)="openModal(contentSalida)">Abrir Salida</button>
+            <br/>
+            <img src="assets/exit.png"><h6>Salida</h6>
+        </ng-template>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h3 class="text-center">Vehiculos parqueados</h3></div>
+      </div>
+      <ul class="list-group" *ngFor="let item of autosList | async">
+        <li class="list-group-item list-group-item-action flex-column">
+          <div class="row">
+            <div class="col-md-2">
+              <img src="assets/carlist.png">
+            </div>
+            <div class="col-md-10">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">PLACA: {{item.placa}}</h5>
+                <small>Parqueado</small>
+              </div>
+              <p>hora de entrada: {{item.fentrada}}</p>
+              <p>Saldo acumulado: {{getSaldoAcumulado(item.fentrada)}}</p>
+            </div>
+          </div>
+        </li>
+      </ul>  
+    </div>
+  </div>
+</div>
+<!-- modales -->
+<!--Modal ingresar Autos-->
+<ng-template #contentIngreso let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Ingreso de automovil</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ngb-alert type="success" [dismissible]="false" *ngIf="autoIngresado">Automovil Permitido</ngb-alert>
+        <div class="row" [hidden]="autoIngresado">
+            <div class="col-sm-12">
+                <form (ngSubmit)="onSubmitIngreso()">
+                    <div class="form-group">
+                        <label for="txtPlaca">Placa</label>
+                        <input type="text" id="txtPlaca" name="placa" class="form-control" [(ngModel)]="auto.placa" placeholder="Ejemplo: ABC123">
+                    </div>
+                    <button type="submit" class="btn btn-success">Ingresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="d('Cross click'); newIngreso()">Cerrar</button>
+    </div>
+</ng-template>
+
+<!-- modal salida autos -->
+<ng-template #contentSalida let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Salida de automovil</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ngb-alert type="success" [dismissible]="false" *ngIf="autoRetirado">Pago Realizado: {{pagoRealizado}}</ngb-alert>
+        <div class="row" [hidden]="autoRetirado">
+            <div class="col-sm-12">
+                <form (ngSubmit)="onSubmitSalida(txtPlacaSal.value)">
+                    <div class="form-group">
+                        <label for="txtPlacaModif">Placa</label>
+                        <input type="text" id="txtPlacaModif" name="placaModif" class="form-control" #txtPlacaSal placeholder="Ejemplo: ABC123">
+                    </div>
+                    <button type="submit" class="btn btn-success">Permitir Salida</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click'); newSalida();">Cerrar</button>
+    </div>
+</ng-template>
+
+
